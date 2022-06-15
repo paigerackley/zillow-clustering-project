@@ -1,5 +1,5 @@
 # <center><a name="top"></a>Clustering Project: Zillow Logerror
-![](https://github.com/paigerackley/zillow-clustering-project/blob/main/images/
+![](https://github.com/paigerackley/zillow-clustering-project/blob/main/images/Zillow-Logo.png)
 
 by: Paige Rackley </center>
 
