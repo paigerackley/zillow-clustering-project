@@ -34,7 +34,9 @@ ___
  - My audience is the Zillow Data Science team. 
   
  ### Deliverables:
-
+ - A final report notebook to be walked through during presentation.
+ - Notebooks used while working through data. 
+ - Modules used during project to be used to replicate.
 
 ###  Executive Summary: 
 
@@ -92,8 +94,7 @@ Functions created:
 
 
 ## <a name="conclusion"></a>Conclusion:
-  
- # Conclusion:
+
 
   
 ### With more time:
