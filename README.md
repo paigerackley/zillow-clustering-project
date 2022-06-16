@@ -1,4 +1,4 @@
-# <center><a name="top"></a>Clustering Project: Zillow Logerror
+# <center><a name="top"></a>Clustering Project: Zillow Logerror Prediction
 ![](https://github.com/paigerackley/zillow-clustering-project/blob/main/images/zill.png)
 
 by: Paige Rackley </center>
@@ -21,6 +21,8 @@ ___
 
 
 ## <a name="project_description"></a>Project Description:
+The goal of this project is to identify drivers of error looking at logerror. The reason we want to be able to predict logerror to to better improve our current models. Improving our models helps better serve our customers at Zillow because we can give them the data they request without error. We want our customers to trust us and the best way to get them to do that is to be able to give them info that is accurate.
+
 
 
   
@@ -29,6 +31,9 @@ ___
   
   
  ### Business Goals: 
+ - Use clustering algorithms to help determine predictors of logerror to help improve the performance of our current model.
+ - Using drivers of logerror to help imrpove our model of property values.
+ - Improve understanding of logerror to better inform the use of models for property prediction.
 
  ### Audience:
  - My audience is the Zillow Data Science team. 
@@ -110,5 +115,6 @@ Functions created:
   
   **How to Reproduce**
 - [x] Read this README.md
-- [ ] 
+- [ ] Download modules into your working directory.
+- [ ] Create a .gitignore for env.py since it contains confidential info such as username and password to access SQL databases.
 - [ ] Have fun doing your own exploring, modeling, and more! 
