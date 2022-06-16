@@ -5,6 +5,8 @@ import os
 from env import get_db_url
 
 from sklearn.model_selection import train_test_split
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import MinMaxScaler
 
 ## ACQUIRE ##
 
@@ -13,7 +15,6 @@ def get_zillow():
     This function acquires the requisite zillow data from the Codeup SQL database and caches it locally it for future use in a csv 
     document; once the data is accessed the function then returns it as a dataframe.
     '''
-
     filename = "zillow.csv"
     
     url = get_db_url('zillow')
@@ -22,7 +23,7 @@ def get_zillow():
         return pd.read_csv(filename)
     else:
         query = '''
-    SELECT
+   SELECT
         prop.*,
         predictions_2017.logerror,
         predictions_2017.transactiondate,
@@ -53,81 +54,99 @@ def get_zillow():
       AND transactiondate <= '2017-12-31'
       AND propertylandusedesc = "Single Family Residential"
 '''
-#create df
-    df = pd.read_sql(query, url)
 
-#create cached csv
-    df.to_csv('zillow.csv', index = False)                          
-    return df
-
-
-
-    
-## Other functions ##
-
-def map_counties(df):
-    # identified counties for fips codes 
-    counties = {6037: 'los_angeles',
-                6059: 'orange',
-                6111: 'ventura'}
-    # map counties to fips codes
-    df.fips = df.fips.map(counties)
-    df.rename(columns=({ 'fips': 'county'}), inplace=True)
-    return df
-
-def overview(df):
-    print('--- Shape: {}'.format(df.shape))
-    print()
-    print('--- Info')
-    df.info()
-    print()
-    print('--- Column Descriptions')
-    print(df.describe(include='all'))
-
-def takeout_outliers1(df):
-    #this code properly sets a data ceiling
-    df = df[(df.logerror <= 2.5) & (df.logerror >= -2.5)]
-
-    df = df[(df.logerror >= 0.03) | (df.logerror <= -0.03)]
-
-    return df
-
-def nulls_by_columns(df):
-    return pd.concat([
-        df.isna().sum().rename('count'),
-        df.isna().mean().rename('percent')
-    ], axis=1)
-
-def nulls_by_rows(df):
-    return pd.concat([
-        df.isna().sum(axis=1).rename('n_missing'),
-        df.isna().mean(axis=1).rename('percent_missing'),
-    ], axis=1).value_counts().sort_index()
-
-def remove_columns(df, cols_to_remove):  
-	#remove columns not needed
-    df = df.drop(columns=cols_to_remove)
-    return df
+## SPLIT ##
+def train_validate_test_split(df, seed=123):
+    '''
+    This function takes in a dataframe, the name of the target variable, and an integer for a setting a seed
+    and splits the data into train, validate and test.
+    Test is 20% of the original dataset, validate is .30*.80= 24% of the
+    original dataset, and train is .70*.80= 56% of the original dataset.
+    The function returns, in this order, train, validate and test dataframes.
+    '''
+    train_validate, test = train_test_split(df, test_size=0.2,
+                                            random_state=123, stratify = df.fips)
+    train, validate = train_test_split(train_validate, test_size=0.3,
+                                       random_state=123, stratify = df.fips)
+    return train, validate, test
 
 
-def handle_missing_values(df, prop_required_column = .6, prop_required_row = .75):
+
+def handle_missing_values(df, prop_required_column = .5, prop_required_row = .75):
     threshold = int(round(prop_required_column*len(df.index),0))
     df.dropna(axis=1, thresh=threshold, inplace=True)
     threshold = int(round(prop_required_row*len(df.columns),0))
     df.dropna(axis=0, thresh=threshold, inplace=True)
     return df
 
-    ## SPLIT ##
+#### Wrangle / Prep ####
 
-def split_data(df):
-    '''
-    take in a DataFrame and return train, validate, and test DataFrames; stratify on taxvaluedollarcnt.
-    return train, validate, test DataFrames.
-    '''
+def wrangle_zillow():
+    """
+    Acquires Zillow data
+    Handles nulls
+    optimizes or fixes data types
+    handles outliers w/ manual logic
+    returns a clean dataframe
+    """ 
+    
+    # Acquire function 
+    df = get_zillow()
+
+    df = handle_missing_values(df)
+
+    # handle nulls
+    df = df.drop(columns=['calculatedbathnbr', 'finishedsquarefeet12', 'fullbathcnt', 'id', 'id.1'], axis=1)
+    df = df.drop(columns=['buildingqualitytypeid', 'regionidcity', 'regionidzip', 'regionidneighborhood', 'roomcnt', 'unitcnt'], axis=1)
+    df = df.drop(columns=['numberofstories','structuretaxvaluedollarcnt', 'landtaxvaluedollarcnt', 'taxvaluedollarcnt', 'taxamount', 'assessmentyear'],  axis=1)
+    df = df.drop(columns=['airconditioningdesc', 'airconditioningtypeid', 'heatingorsystemdesc', 'heatingorsystemtypeid', 'regionidcounty'], axis=1)
+    df = df.drop(columns=['propertyzoningdesc','censustractandblock', 'rawcensustractandblock'], axis=1)
+    df[['garagecarcnt', 'garagetotalsqft']] = df[['garagecarcnt', 'garagetotalsqft']].fillna(0)
+    df['poolcnt'] = df['poolcnt'].fillna(0)
+    
+    # rename counties
+    counties = {6037: 'los_angeles',
+                6059: 'orange',
+                6111: 'ventura'}
+    # map counties to fips codes
+    df.fips = df.fips.map(counties)
+    df.rename(columns=({ 'fips': 'county'}), inplace=True)
+
+    # remove outliers
+    df = df[df.bathroomcnt >= 1]
+    df = df[df.bathroomcnt <= 5]
+    df = df[df.bedroomcnt >= 1]
+    df = df[df.bedroomcnt <= 5]
+    df = df[df.logerror < 0.5]
+    df = df[df.logerror > (-0.31)]
+    df = df[df.yearbuilt >= 1910]
+    df = df[df.calculatedfinishedsquarefeet >= 650]
+    df = df[df.calculatedfinishedsquarefeet <= 5500]
+    df = df[df.taxvaluedollarcnt > 40000.0]
+    df = df[df.taxvaluedollarcnt < 3000000.0]
+    df = df.dropna(thresh=df.shape[0]*0.2,how='all',axis=1)
+
+    # get single unit homes
+    single_unit = [261, 262, 263, 264, 266, 268, 273, 276, 279]
+    df = df[df.propertylandusetypeid.isin(single_unit)]
+
+    
 
 
-    train_validate, test = train_test_split(df, test_size=.2, random_state=123, stratify = df.fips)
-    train, validate = train_test_split(train_validate, 
-                                       test_size=.3, 
-                                       random_state=123)
-    return train, validate, test
+
+
+
+
+
+## all together
+
+# Scaling??
+
+# def wrangle_split_scale():
+    
+    df = wrangle_zillow()
+    train, validate, test = train_validate_test_split(df)
+    train_scaled, validate_scaled, test_scaled = scale_data(train, validate, test)
+    
+    return train_scaled, validate_scaled, test_scaled
+
