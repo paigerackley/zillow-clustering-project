@@ -5,7 +5,6 @@ import os
 from env import get_db_url
 
 from sklearn.model_selection import train_test_split
-from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import MinMaxScaler
 
 ## ACQUIRE ##
@@ -94,8 +93,8 @@ def wrangle_zillow():
     'fullbathcnt','structuretaxvaluedollarcnt','landtaxvaluedollarcnt',
     'taxamount','regionidcity','censustractandblock','transactiondate'])
 
-    
-    # rename counties
+    # deal with fips
+    # identified counties for fips codes 
     counties = {6037: 'los_angeles',
                 6059: 'orange',
                 6111: 'ventura'}
@@ -125,7 +124,7 @@ def wrangle_zillow():
 
 
     ## SPLIT ##
-def train_validate_test_split(df, seed=123):
+def split(df, seed=123):
     '''
     This function takes in a dataframe, the name of the target variable, and an integer for a setting a seed
     and splits the data into train, validate and test.
@@ -134,9 +133,9 @@ def train_validate_test_split(df, seed=123):
     The function returns, in this order, train, validate and test dataframes.
     '''
     train_validate, test = train_test_split(df, test_size=0.2,
-                                            random_state=123, stratify = df.fips)
+                                            random_state=seed, stratify = df.county)
     train, validate = train_test_split(train_validate, test_size=0.3,
-                                       random_state=123, stratify = df.fips)
+                                       random_state=seed, stratify = df.county)
     return train, validate, test
 
 #### Scale ####
