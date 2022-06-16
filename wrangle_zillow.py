@@ -53,6 +53,7 @@ def get_zillow():
       AND prop.longitude IS NOT NULL
       AND transactiondate <= '2017-12-31'
       AND propertylandusedesc = "Single Family Residential"
+
 '''
 
 ## SPLIT ##
@@ -129,6 +130,8 @@ def wrangle_zillow():
     # get single unit homes
     single_unit = [261, 262, 263, 264, 266, 268, 273, 276, 279]
     df = df[df.propertylandusetypeid.isin(single_unit)]
+
+    return df 
 
     
 
