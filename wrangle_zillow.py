@@ -84,6 +84,14 @@ def overview(df):
     print('--- Column Descriptions')
     print(df.describe(include='all'))
 
+def takeout_outliers1(df):
+    #this code properly sets a data ceiling
+    df = df[(df.logerror <= 2.5) & (df.logerror >= -2.5)]
+
+    df = df[(df.logerror >= 0.03) | (df.logerror <= -0.03)]
+
+    return df
+
 def nulls_by_columns(df):
     return pd.concat([
         df.isna().sum().rename('count'),
