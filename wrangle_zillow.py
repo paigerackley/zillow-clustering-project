@@ -55,24 +55,14 @@ def get_zillow():
       AND propertylandusedesc = "Single Family Residential"
 
 '''
+#create df
+    df = pd.read_sql(query, url)
 
-## SPLIT ##
-def train_validate_test_split(df, seed=123):
-    '''
-    This function takes in a dataframe, the name of the target variable, and an integer for a setting a seed
-    and splits the data into train, validate and test.
-    Test is 20% of the original dataset, validate is .30*.80= 24% of the
-    original dataset, and train is .70*.80= 56% of the original dataset.
-    The function returns, in this order, train, validate and test dataframes.
-    '''
-    train_validate, test = train_test_split(df, test_size=0.2,
-                                            random_state=123, stratify = df.fips)
-    train, validate = train_test_split(train_validate, test_size=0.3,
-                                       random_state=123, stratify = df.fips)
-    return train, validate, test
+#create cached csv
+    df.to_csv('zillow.csv', index = False)                          
+    return df
 
-
-
+### Needing this in wrangle ####
 def handle_missing_values(df, prop_required_column = .5, prop_required_row = .75):
     threshold = int(round(prop_required_column*len(df.index),0))
     df.dropna(axis=1, thresh=threshold, inplace=True)
@@ -97,13 +87,13 @@ def wrangle_zillow():
     df = handle_missing_values(df)
 
     # handle nulls
-    df = df.drop(columns=['calculatedbathnbr', 'finishedsquarefeet12', 'fullbathcnt', 'id', 'id.1'], axis=1)
-    df = df.drop(columns=['buildingqualitytypeid', 'regionidcity', 'regionidzip', 'regionidneighborhood', 'roomcnt', 'unitcnt'], axis=1)
-    df = df.drop(columns=['numberofstories','structuretaxvaluedollarcnt', 'landtaxvaluedollarcnt', 'taxvaluedollarcnt', 'taxamount', 'assessmentyear'],  axis=1)
-    df = df.drop(columns=['airconditioningdesc', 'airconditioningtypeid', 'heatingorsystemdesc', 'heatingorsystemtypeid', 'regionidcounty'], axis=1)
-    df = df.drop(columns=['propertyzoningdesc','censustractandblock', 'rawcensustractandblock'], axis=1)
-    df[['garagecarcnt', 'garagetotalsqft']] = df[['garagecarcnt', 'garagetotalsqft']].fillna(0)
-    df['poolcnt'] = df['poolcnt'].fillna(0)
+    df = df.drop(columns=['roomcnt','parcelid','propertycountylandusecode',
+    'propertylandusedesc','propertyzoningdesc',
+    'buildingqualitytypeid','heatingorsystemtypeid','unitcnt',
+    'heatingorsystemdesc','calculatedbathnbr','id','finishedsquarefeet12',
+    'fullbathcnt','structuretaxvaluedollarcnt','landtaxvaluedollarcnt',
+    'taxamount','regionidcity','censustractandblock','transactiondate'])
+
     
     # rename counties
     counties = {6037: 'los_angeles',
@@ -131,25 +121,61 @@ def wrangle_zillow():
     single_unit = [261, 262, 263, 264, 266, 268, 273, 276, 279]
     df = df[df.propertylandusetypeid.isin(single_unit)]
 
-    return df 
+    return df
 
+
+    ## SPLIT ##
+def train_validate_test_split(df, seed=123):
+    '''
+    This function takes in a dataframe, the name of the target variable, and an integer for a setting a seed
+    and splits the data into train, validate and test.
+    Test is 20% of the original dataset, validate is .30*.80= 24% of the
+    original dataset, and train is .70*.80= 56% of the original dataset.
+    The function returns, in this order, train, validate and test dataframes.
+    '''
+    train_validate, test = train_test_split(df, test_size=0.2,
+                                            random_state=123, stratify = df.fips)
+    train, validate = train_test_split(train_validate, test_size=0.3,
+                                       random_state=123, stratify = df.fips)
+    return train, validate, test
+
+#### Scale ####
+def scale_data(train, 
+               validate, 
+               test, 
+               columns_to_scale=['bedroomcnt', 'bathroomcnt',
+                'calculatedfinishedsquarefeet']):
+    '''
+    Scales the 3 data splits. 
+    Takes in train, validate, and test data splits and returns their scaled counterparts.
+    If return_scalar is True, the scaler object will be returned as well
+    '''
+    train_scaled = train.copy()
+    validate_scaled = validate.copy()
+    test_scaled = test.copy()
+    
+    scaler = MinMaxScaler()
+    scaler.fit(train[columns_to_scale])
+    
+    train_scaled[columns_to_scale] = pd.DataFrame(scaler.transform(train[columns_to_scale]),
+                                                  columns=train[columns_to_scale].columns.values).set_index([train.index.values])
+                                                  
+    validate_scaled[columns_to_scale] = pd.DataFrame(scaler.transform(validate[columns_to_scale]),
+                                                  columns=validate[columns_to_scale].columns.values).set_index([validate.index.values])
+    
+    test_scaled[columns_to_scale] = pd.DataFrame(scaler.transform(test[columns_to_scale]),
+                                                 columns=test[columns_to_scale].columns.values).set_index([test.index.values])
     
 
-
-
-
-
-
-
-## all together
-
-# Scaling??
-
-# def wrangle_split_scale():
-    
-    df = wrangle_zillow()
-    train, validate, test = train_validate_test_split(df)
-    train_scaled, validate_scaled, test_scaled = scale_data(train, validate, test)
-    
     return train_scaled, validate_scaled, test_scaled
+
+
+## All together ## 
+def wrangle_split_scale():
+    
+   df = wrangle_zillow()
+   train, validate, test = train_validate_test_split(df)
+   train_scaled, validate_scaled, test_scaled = scale_data(train, validate, test)
+    
+   return train_scaled, validate_scaled, test_scaled
 
