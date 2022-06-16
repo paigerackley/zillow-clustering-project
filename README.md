@@ -21,6 +21,8 @@ ___
 
 
 ## <a name="project_description"></a>Project Description:
+The goal of this project is to identify drivers of error looking at logerror. 
+
 
 
   
@@ -110,5 +112,6 @@ Functions created:
   
   **How to Reproduce**
 - [x] Read this README.md
-- [ ] 
+- [ ] Download modules into your working directory.
+- [ ] Create a .gitignore for env.py since it contains confidential info such as username and password to access SQL databases.
 - [ ] Have fun doing your own exploring, modeling, and more! 
