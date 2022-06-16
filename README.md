@@ -21,7 +21,7 @@ ___
 
 
 ## <a name="project_description"></a>Project Description:
-The goal of this project is to identify drivers of error looking at logerror. 
+The goal of this project is to identify drivers of error looking at logerror. The reason we want to be able to predict logerror to to better improve our current models. Improving our models helps better serve our customers at Zillow because we can give them the data they request without error. We want our customers to trust us and the best way to get them to do that is to be able to give them info that is accurate.
 
 
 
@@ -31,6 +31,9 @@ The goal of this project is to identify drivers of error looking at logerror.
   
   
  ### Business Goals: 
+ - Use clustering algorithms to help determine predictors of logerror to help improve the performance of a property value model
+ - Using drivers of logerror to improve a model of property values
+ - Improve understanding of logerror to better inform the use of models for property prediction
 
  ### Audience:
  - My audience is the Zillow Data Science team. 
