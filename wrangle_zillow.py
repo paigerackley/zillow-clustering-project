@@ -114,11 +114,7 @@ def wrangle_zillow():
     single_unit = [261, 262, 263, 264, 266, 268, 273, 276, 279]
     df = df[df.propertylandusetypeid.isin(single_unit)]
 
-    # binning#
-    df['age_bin'] = pd.cut(df.yearbuilt, 
-                           bins = [0, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140],
-                           labels = [0, .066, .133, .20, .266, .333, .40, .466, .533, 
-                                     .60, .666, .733, .8, .866, .933])
+# binning#
 
 # create acres variable
     df['acres'] = df.lotsizesquarefeet/43560
@@ -134,10 +130,11 @@ def wrangle_zillow():
                        )
 
 # handle nulls
-    df = df.drop(columns= ['propertycountylandusecode','propertylandusedesc',
+    df = df.drop(columns= ['parcelid', 'propertycountylandusecode','propertylandusedesc',
     'propertyzoningdesc','buildingqualitytypeid','heatingorsystemtypeid','unitcnt',
     'heatingorsystemdesc','calculatedbathnbr','id','finishedsquarefeet12','fullbathcnt',
-    'censustractandblock', 'yearbuilt', 'lotsizesquarefeet', 'rawcensustractandblock'
+    'censustractandblock', 'yearbuilt', 'lotsizesquarefeet', 'rawcensustractandblock',
+     'propertylandusetypeid', 'regionidcity', 'regionidcounty', 'regionidzip',
     ])
 
     return df
@@ -162,8 +159,8 @@ def split(df, seed=123):
 def scale_data(train, 
                validate, 
                test, 
-               columns_to_scale=['latitude', 'longitude', 'taxvalluedollarcnt'
-                'calculatedfinishedsquarefeet', ]):
+               columns_to_scale=['latitude', 'longitude', 'taxvaluedollarcnt',
+                'calculatedfinishedsquarefeet']):
     '''
     Scales the 3 data splits. 
     Takes in train, validate, and test data splits and returns their scaled counterparts.
