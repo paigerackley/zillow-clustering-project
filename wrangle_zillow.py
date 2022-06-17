@@ -86,12 +86,12 @@ def wrangle_zillow():
     df = handle_missing_values(df)
 
     # handle nulls
-    df = df.drop(columns=['roomcnt','parcelid','propertycountylandusecode',
-    'propertylandusedesc','propertyzoningdesc',
-    'buildingqualitytypeid','heatingorsystemtypeid','unitcnt',
-    'heatingorsystemdesc','calculatedbathnbr','id','finishedsquarefeet12',
-    'fullbathcnt','structuretaxvaluedollarcnt','landtaxvaluedollarcnt',
-    'taxamount','regionidcity','censustractandblock','transactiondate'])
+    df = df.drop(columns= ['roomcnt','propertycountylandusecode','propertylandusedesc',
+    'propertyzoningdesc','buildingqualitytypeid','heatingorsystemtypeid','unitcnt',
+    'heatingorsystemdesc','calculatedbathnbr','id','finishedsquarefeet12','fullbathcnt',
+    'structuretaxvaluedollarcnt','landtaxvaluedollarcnt','taxamount','regionidcity',
+    'censustractandblock','transactiondate'])
+
 
     # deal with fips
     # identified counties for fips codes 
@@ -135,7 +135,7 @@ def split(df, seed=123):
     train_validate, test = train_test_split(df, test_size=0.2,
                                             random_state=seed, stratify = df.county)
     train, validate = train_test_split(train_validate, test_size=0.3,
-                                       random_state=seed, stratify = df.county)
+                                       random_state=seed, stratify = train_validate.county)
     return train, validate, test
 
 #### Scale ####
