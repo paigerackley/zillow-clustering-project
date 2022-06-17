@@ -116,13 +116,6 @@ def wrangle_zillow():
 
 # binning#
 
-# create acres variable
-    df['acres'] = df.lotsizesquarefeet/43560
-
-# bin acres
-    df['acres_bin'] = pd.cut(df.acres, bins = [0, .10, .15, .25, .5, 1, 5, 10, 20, 50, 200], 
-                       labels = [0, .1, .2, .3, .4, .5, .6, .7, .8, .9])
-
 # square feet bin
     df['square_feet'] = pd.cut(df.calculatedfinishedsquarefeet, 
                             bins = [0, 800, 1000, 1250, 1500, 2000, 2500, 3000, 4000, 7000, 12000],
@@ -133,7 +126,7 @@ def wrangle_zillow():
     df = df.drop(columns= ['parcelid', 'propertycountylandusecode','propertylandusedesc',
     'propertyzoningdesc','buildingqualitytypeid','heatingorsystemtypeid','unitcnt',
     'heatingorsystemdesc','calculatedbathnbr','id','finishedsquarefeet12','fullbathcnt',
-    'censustractandblock', 'yearbuilt', 'lotsizesquarefeet', 'rawcensustractandblock',
+    'censustractandblock', 'rawcensustractandblock',
      'propertylandusetypeid', 'regionidcity', 'regionidcounty', 'regionidzip',
     ])
 
