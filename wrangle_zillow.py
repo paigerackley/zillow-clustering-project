@@ -87,14 +87,6 @@ def wrangle_zillow():
 
     df = handle_missing_values(df)
 
-    # handle nulls
-    df = df.drop(columns= ['roomcnt','propertycountylandusecode','propertylandusedesc',
-    'propertyzoningdesc','buildingqualitytypeid','heatingorsystemtypeid','unitcnt',
-    'heatingorsystemdesc','calculatedbathnbr','id','finishedsquarefeet12','fullbathcnt',
-    'structuretaxvaluedollarcnt','landtaxvaluedollarcnt','taxamount','regionidcity',
-    'censustractandblock','transactiondate'])
-
-
     # deal with fips
     # identified counties for fips codes 
     counties = {6037: 'los_angeles',
@@ -122,6 +114,32 @@ def wrangle_zillow():
     single_unit = [261, 262, 263, 264, 266, 268, 273, 276, 279]
     df = df[df.propertylandusetypeid.isin(single_unit)]
 
+    # binning#
+    df['age_bin'] = pd.cut(df.yearbuilt, 
+                           bins = [0, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140],
+                           labels = [0, .066, .133, .20, .266, .333, .40, .466, .533, 
+                                     .60, .666, .733, .8, .866, .933])
+
+# create acres variable
+    df['acres'] = df.lotsizesquarefeet/43560
+
+# bin acres
+    df['acres_bin'] = pd.cut(df.acres, bins = [0, .10, .15, .25, .5, 1, 5, 10, 20, 50, 200], 
+                       labels = [0, .1, .2, .3, .4, .5, .6, .7, .8, .9])
+
+# square feet bin
+    df['square_feet'] = pd.cut(df.calculatedfinishedsquarefeet, 
+                            bins = [0, 800, 1000, 1250, 1500, 2000, 2500, 3000, 4000, 7000, 12000],
+                            labels = [0, .1, .2, .3, .4, .5, .6, .7, .8, .9]
+                       )
+
+# handle nulls
+    df = df.drop(columns= ['propertycountylandusecode','propertylandusedesc',
+    'propertyzoningdesc','buildingqualitytypeid','heatingorsystemtypeid','unitcnt',
+    'heatingorsystemdesc','calculatedbathnbr','id','finishedsquarefeet12','fullbathcnt',
+    'censustractandblock', 'yearbuilt', 'lotsizesquarefeet', 'rawcensustractandblock'
+    ])
+
     return df
 
 
@@ -145,7 +163,7 @@ def scale_data(train,
                validate, 
                test, 
                columns_to_scale=['latitude', 'longitude', 'taxvalluedollarcnt'
-                'calculatedfinishedsquarefeet']):
+                'calculatedfinishedsquarefeet', ]):
     '''
     Scales the 3 data splits. 
     Takes in train, validate, and test data splits and returns their scaled counterparts.
