@@ -175,7 +175,7 @@ def scale_data(train,
 def wrangle_split_scale():
     
    df = wrangle_zillow()
-   train, validate, test = train_validate_test_split(df)
+   train, validate, test = split(df)
    train_scaled, validate_scaled, test_scaled = scale_data(train, validate, test)
     
    return train_scaled, validate_scaled, test_scaled
