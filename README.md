@@ -54,6 +54,30 @@ The goal of this project is to identify drivers of error looking at logerror. Th
 
 
 ## <a name="dictionary"></a>Data Dictionary  
+Target|Datatype|Definition|
+|:-------|:--------|:----------|
+| logerror | float64 | Log Error |
+
+|Feature|Datatype|Definition|
+|:-------|:--------|:----------|
+| bedroomcnt       | float64 |    number of bedrooms |
+| bathroomcnt        | float64 |    number of bathrooms |
+| scalculatedfinishedsquarefeet       | float64 |    total square feet of home |
+| county       | object |    county/zipcode |
+| latitude      | float64 |    latitude of home |
+| longitude       | float64 |    longitude of home |
+| lotsizesquarefeet | float64 | Square feet of lot |
+| propertylandusetypeid | float64 | Property Land Use type ID |
+| rawcensustractandblock | float64 | Raw Census |
+| regionidcounty | float64 | Region ID for county |
+| regionidzip | float64 | Region ID for zipcode |
+| yearbuilt | float64 | Year home was built |
+| taxvaluedollarcnt | float64 | Tax Vallue total |
+| assessmentyear | float64 | Assessment Year |
+  
+  
+  
+  
 [[Back to top](#top)]
 
 ### Data Used
