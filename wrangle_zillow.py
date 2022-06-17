@@ -62,6 +62,8 @@ def get_zillow():
     return df
 
 ### Needing this in wrangle ####
+#How to handle missing values based on minimum percentage of values 
+#for rows and columns
 def handle_missing_values(df, prop_required_column = .5, prop_required_row = .75):
     threshold = int(round(prop_required_column*len(df.index),0))
     df.dropna(axis=1, thresh=threshold, inplace=True)
@@ -142,7 +144,7 @@ def split(df, seed=123):
 def scale_data(train, 
                validate, 
                test, 
-               columns_to_scale=['bedroomcnt', 'bathroomcnt',
+               columns_to_scale=['latitude', 'longitude', 'taxvalluedollarcnt'
                 'calculatedfinishedsquarefeet']):
     '''
     Scales the 3 data splits. 
