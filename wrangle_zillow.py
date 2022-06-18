@@ -114,14 +114,6 @@ def wrangle_zillow():
     single_unit = [261, 262, 263, 264, 266, 268, 273, 276, 279]
     df = df[df.propertylandusetypeid.isin(single_unit)]
 
-# binning#
-
-# square feet bin
-    df['square_feet'] = pd.cut(df.calculatedfinishedsquarefeet, 
-                            bins = [0, 800, 1000, 1250, 1500, 2000, 2500, 3000, 4000, 7000, 12000],
-                            labels = [0, .1, .2, .3, .4, .5, .6, .7, .8, .9]
-                       )
-
 # handle nulls
     df = df.drop(columns= ['parcelid', 'propertycountylandusecode','propertylandusedesc',
     'propertyzoningdesc','buildingqualitytypeid','heatingorsystemtypeid','unitcnt',
