@@ -80,10 +80,6 @@ Target|Datatype|Definition|
   
 [[Back to top](#top)]
 
-### Data Used
-
-***
-
 ## <a name="wrangle"></a>Data Acquisition and Preparation
   
  ## Acquire
