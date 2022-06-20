@@ -48,8 +48,9 @@ Our goal was to find drivers, find clusters, and test them to see if there was a
         
 ### Initial Hypothesis/Questions: 
 - There is a relationship between yearbuilt and logerror.
+- There is a relationship between county and logerror, but not specifically one county.
+- There is a relationship between bedroomcnt and logerror.
 - There was not a strong relationship between the clusters created.
-
 
 
 [[Back to top](#top)]
