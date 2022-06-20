@@ -86,15 +86,17 @@ def wrangle_zillow():
 
     df = handle_missing_values(df)
 
-    # deal with fips
-    # identified counties for fips codes 
-    counties = {6037: 'los_angeles',
-                6059: 'orange',
-                6111: 'ventura'}
-    # map counties to fips codes
-    df.fips = df.fips.map(counties)
-    df.rename(columns=({ 'fips': 'county'}), inplace=True)
-    
+   # Drop all nulls from dataset
+    df = df.dropna()
+    # Convert some columns to integers
+    # fips, yearbuilt, and bedrooms can be integers
+    df["fips"] = df["fips"].astype(int)
+    df["yearbuilt"] = df["yearbuilt"].astype(int)
+    df["bedroomcnt"] = df["bedroomcnt"].astype(int)    
+    df["taxvaluedollarcnt"] = df["taxvaluedollarcnt"].astype(int)
+    df["calculatedfinishedsquarefeet"] = df["calculatedfinishedsquarefeet"].astype(int)
+
+
     # remove outliers
     df = df[df.bathroomcnt >= 1]
     df = df[df.bathroomcnt <= 5]
@@ -118,9 +120,18 @@ def wrangle_zillow():
     'propertyzoningdesc','buildingqualitytypeid','heatingorsystemtypeid','unitcnt',
     'heatingorsystemdesc','calculatedbathnbr','id','finishedsquarefeet12','fullbathcnt',
     'censustractandblock', 'rawcensustractandblock',
-     'propertylandusetypeid', 'regionidcity', 'regionidcounty', 'regionidzip',
+     'propertylandusetypeid', 'regionidcity', 'regionidcounty', 'regionidzip', 'transactiondate'
     ])
 
+# Convert Fips to Names
+    df['county'] = np.where(df.fips == 6037, 'Los_Angeles', np.where(df.fips == 6059, 'Orange','Ventura') )
+    df = df.drop(columns = 'fips')
+
+# Make dummies df for non-binary variables, fips_name is now an object
+    dummy_df = pd.get_dummies(df[['county']], dummy_na=False, \
+                              drop_first=True)
+    # Concat dummy to original
+    df = pd.concat([df, dummy_df], axis=1)
     return df
 
 
