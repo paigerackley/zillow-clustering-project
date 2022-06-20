@@ -94,7 +94,7 @@ def wrangle_zillow():
     # map counties to fips codes
     df.fips = df.fips.map(counties)
     df.rename(columns=({ 'fips': 'county'}), inplace=True)
-
+    
     # remove outliers
     df = df[df.bathroomcnt >= 1]
     df = df[df.bathroomcnt <= 5]
