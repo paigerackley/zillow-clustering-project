@@ -139,9 +139,7 @@ For this Zillow project, since we would be using clustering, I wanted to focus o
 [[Back to top](#top)]
 
 ### Takeaways from exploration:
-## Initial Hypothesis :
-- There is a relationship between yearbuilt and logerror.
-- There was not a strong relationship between the clusters created.
+ - All 3 clusters after testing failed to reject null hypothesis and didn't have any significant results.
 
 
 ## <a name="model"></a>Modeling:
