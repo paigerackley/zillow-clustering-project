@@ -139,7 +139,9 @@ For this Zillow project, since we would be using clustering, I wanted to focus o
 [[Back to top](#top)]
 
 ### Takeaways from exploration:
- - All 3 clusters after testing failed to reject null hypothesis and didn't have any significant results.
+ - All 3 clusters after testing failed to reject null hypothesis.
+ - All 3 didn't have any significant results.
+ - Maybe trying smaller clusters or using different features for further exploration.
 
 
 ## <a name="model"></a>Modeling:
