@@ -52,7 +52,6 @@ def get_zillow():
       AND prop.longitude IS NOT NULL
       AND transactiondate <= '2017-12-31'
       AND propertylandusedesc = "Single Family Residential"
-
 '''
 #create df
     df = pd.read_sql(query, url)
@@ -179,4 +178,3 @@ def wrangle_split_scale():
    train_scaled, validate_scaled, test_scaled = scale_data(train, validate, test)
     
    return train_scaled, validate_scaled, test_scaled
-
