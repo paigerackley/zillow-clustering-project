@@ -123,7 +123,7 @@ def wrangle_zillow():
      'propertylandusetypeid', 'regionidcity', 'regionidcounty', 'regionidzip', 'transactiondate'
     ])
 
-# Convert Fips to Names
+# Convert Fips to County
     df['county'] = np.where(df.fips == 6037, 'Los_Angeles', np.where(df.fips == 6059, 'Orange','Ventura') )
     df = df.drop(columns = 'fips')
 
