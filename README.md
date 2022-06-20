@@ -145,7 +145,23 @@ For this Zillow project, since we would be using clustering, I wanted to focus o
 
 
 ## <a name="model"></a>Modeling:
-  
+  Final Results : 
+    
+    
+	| model	| RMSE_train |	RMSE_validate
+baseline_mean |	0.088933 | 0.088828
+
+baseline_median	| 0.089109 | 0.088993
+
+linear regression |	0.088677 | 0.088951
+
+LassoLars regression |	0.088933 | 0.088833
+
+Polynomial regression | 1.563197 | 1.739704
+
+
+RMSE for Polynomial Model, degrees=2
+Test:  1.7995147682943546
 
   
 [[Back to top](#top)]
@@ -156,7 +172,7 @@ For this Zillow project, since we would be using clustering, I wanted to focus o
 
 ## In conclusion:
 
-- The model does not do better than the baseline.
+- Polynomial Regression model does better than baselines and LassoLars and Linear regression by a lot. 
 - Using the unstructured ML method of cluster models does not show to be the best model method when it comes to determining logerror predictions.
 - <b> yearbuilt</b> may be an indicator of logerror; however, this requires more investigation.
 - Most important takeaway is that more time is needed to explore the data.
@@ -174,6 +190,7 @@ For this Zillow project, since we would be using clustering, I wanted to focus o
 - I would recommend to continue improving upon the baseline model as it works well enough given the current situation.
 - I would recommend pursuing further identifications of key drivers for logerror to potentially construct better accurate predictors.
 - Consider creating models for each cluster, this may help narrow down other variables.
+
 
 [[Back to top](#top)]
   
