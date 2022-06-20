@@ -171,6 +171,7 @@ For this Zillow project, since we would be using clustering, I wanted to focus o
 ### Recommendations: 
 - I would recommend to continue improving upon the baseline model as it works well enough given the current situation.
 - I would recommend pursuing further identifications of key drivers for logerror to potentially construct better accurate predictors.
+- Consider creating models for each cluster, this may help narrow down other variables.
 
 [[Back to top](#top)]
   
