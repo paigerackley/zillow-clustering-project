@@ -44,9 +44,11 @@ The goal of this project is to identify drivers of error looking at logerror. Th
  - Modules used during project to be used to replicate.
 
 ###  Executive Summary: 
-
+Our goal was to find drivers, find clusters, and test them to see if there was any strong relationship. With those, we tested to see if we can beat our baseline model. We did not get to beat the baseline. 
         
 ### Initial Hypothesis/Questions: 
+- There is a relationship between yearbuilt and logerror.
+- There was not a strong relationship between the clusters created.
 
 
 
@@ -83,15 +85,35 @@ Target|Datatype|Definition|
 ## <a name="wrangle"></a>Data Acquisition and Preparation
   
  ## Acquire
+#### Data was acquired from Zillow database in MySQL Workbench.
+  
+  In this step, I used SQL queries to pull what I wanted from Zillows tables.
 
 
   
 ## Prepare
 
+In this step, I created multiple functions that were meant to help me prepare my data for both exploration and modeling.
 
+<b><font color = 'green'> handle_missing_values:</b></font> How to handle missing values based on minimum percentage of values for rows and columns
 
-Functions created:
+<b><font color = 'green'> wrangle_zillow:</b></font> The wrangle function has the acquire and handle_missing_values nested in it. This function is to explore on independent variables, which will help us decide what to use for clustering later.
 
+Steps implemented: 
+
+    - Get rid of null values in my columns (lose a lot of bulk, nearly no data loss) and redundant columns.
+    - For the 'fips' column I both encode the zip codes to the appropriate countys (Los Angeles, Ventura, Orange County) and rename the column to 'County' for readability.
+    - Removed outliers to many columns:
+       - Bathroom and bedroom count range to 1 - 5
+       - Logerror range to 0.5 to -0.31
+       - Year built houses older than 1910
+       - calculatefinishedsquarefeet range to 650 - 5500
+       - taxvalluedollarcnt range to 40000 - 300000
+<b><font color = 'green'> split:</b></font> This function splits the data into the 3 sets needed for exploring and statistical tests. I stratify on 'county' in this step.
+
+<b><font color = 'green'>scale_data:</b></font> This function scales the the 3 split data sets. 
+
+<b><font color = 'green'>wrangle_split_scale:</b></font>  This function combines everything in to one. We will do our clustering, testing, and modeling here.
 
   
 [[Back to top](#top)]
@@ -99,8 +121,16 @@ Functions created:
 
   
 ## <a name="explore"></a>Data Exploration:
-  ###  Explore
+###  Explore
 
+## The Big Questions: Can clustering help us predict logerror? Can clustering help us beat the baseline?
+
+Our target variable is logerror, so we will be comparing it to individual features as well as combinations of features (clusters). 
+
+For this Zillow project, since we would be using clustering, I wanted to focus on the major key features we have to work with and cluster features that are similar. I came up with three major themes:
+1. Land - refers to the house itself. The size, year it was built, how many rooms, etc.
+2. Location - refers to the geological location of the home.
+3. Tax - refers to the taxes paid on the home. 
 
   
    
@@ -108,6 +138,9 @@ Functions created:
 [[Back to top](#top)]
 
 ### Takeaways from exploration:
+## Initial Hypothesis :
+- There is a relationship between yearbuilt and logerror.
+- There was not a strong relationship between the clusters created.
 
 
 ## <a name="model"></a>Modeling:
@@ -120,15 +153,25 @@ Functions created:
 
 ## <a name="conclusion"></a>Conclusion:
 
+## In conclusion:
 
-  
+- The model does not do better than the baseline.
+- Using the unstructured ML method of cluster models does not show to be the best model method when it comes to determining logerror predictions.
+- <b> yearbuilt</b> may be an indicator of logerror; however, this requires more investigation.
+- Most important takeaway is that more time is needed to explore the data.
+- Although some Key drivers were found, and while they do have a relationship with logerror, many do not have a strong positive relationship with logerror.
+
+
+
+
 ### With more time:
+- logerror outliers would be beneficial to focus on.
+- I would like to try classification models on the data. This may or may not beat the baseline model, but it could still bring in new takeaways.
 
 
-
-## Recomendations: 
-####
-
+### Recommendations: 
+- I would recommend to continue improving upon the baseline model as it works well enough given the current situation.
+- I would recommend pursuing further identifications of key drivers for logerror to potentially construct better accurate predictors.
 
 [[Back to top](#top)]
   
